@@ -12,10 +12,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject sightLineParticleSystem;
 
 	public GUIText angleDisplay;
-	public GUIText calculatorAngleDisplay;
-
 	public GUIText velocityDisplay;
-	public GUIText calculatorVelocityDisplay;
 
 	public GUIText resultDisplay;
 	
@@ -30,10 +27,30 @@ public class PlayerController : MonoBehaviour {
 	public Color c2 = Color.red;
 	public int lengthOfLineRenderer = 2;
 
-	private int x1 = 0;
-	private int x2 = 200;
-	private int y1 = 0;
-	private int y2 = 200;
+	private int lineX1 = 0;
+	private int lineX2 = 200;
+	private int lineY1 = 0;
+	private int lineY2 = 200;
+
+	public GUIText calculatorInstructionDisplay;
+	public GUIText calculatorAngleDisplay;
+	public GUIText calculatorVelocityDisplay;
+	public GUIText calculatorDistanceDisplay;
+	public GUIText calculatorStepDisplay;
+
+	string angleValueString;
+	string velocityValueString;
+	string distanceValueString;
+	const string calcVelText = "Total Throw Velocity will be: ";
+	const string calcAngleText = "Throw Angle is: ";
+	const string calcDistanceText = "Distance is: ";
+
+	public int CURRENT_STEP = 1;
+	const string step1Text = "Step 1: Calculate the effect of the angle on the \n horizontal, X-direction:";
+	const string step2Text = "Step 2: Calculate the effect of the angle on the \n vertical, Y-direction:";
+	const string step3Text = "Step 3: Calculate the X-velocity of the throw:";
+	const string step4Text = "Step 4: Calculate the Y-velocity of the throw:";
+	const string step5Text = "Step 5: ";
 
 	public void onBallCollided( Collision collision )
 	{
@@ -73,11 +90,43 @@ public class PlayerController : MonoBehaviour {
 			if (fireAngle > -1.0f) {
 				fireAngle = -1f * LevelController.MIN_ANGLE;
 			}
-			angleDisplay.text = "Angle: " + (Mathf.Round (fireAngle * 10f * -1) / 10f) + " deg";
+			angleValueString = (Mathf.Round (fireAngle * 10f * -1) / 10f) + " deg";
+			angleDisplay.text = "Angle: " + angleValueString;
 		}
-		velocityDisplay.text = "Velocity: " + (Mathf.Round(fireVelocity * 100f) / 100f) + " m/s";
+		velocityValueString = (Mathf.Round (fireVelocity * 100f) / 100f) + " m/s";
+		velocityDisplay.text = "Velocity: " + velocityValueString;
 
-		Debug.Log ("startLifetime: " + Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY * 8.0f);
+		calculatorVelocityDisplay.text = calcVelText + velocityValueString;
+		calculatorAngleDisplay.text = calcAngleText + angleValueString;
+		calculatorDistanceDisplay.text = calcDistanceText + levelController.distanceValue + " m";
+
+		switch (CURRENT_STEP) {
+			case 0:
+				calculatorStepDisplay.enabled = false;
+				calculatorAngleDisplay.enabled = false;
+				calculatorVelocityDisplay.enabled = false;
+				calculatorDistanceDisplay.enabled = false;
+				break;
+			case 1:
+				calculatorStepDisplay.enabled = true;
+				calculatorAngleDisplay.enabled = true;
+				calculatorVelocityDisplay.enabled = true;
+				calculatorDistanceDisplay.enabled = true;
+
+				calculatorStepDisplay.text = step1Text;
+				break;
+			case 2:
+				calculatorStepDisplay.text = step2Text;
+				break;
+			case 3:
+				calculatorStepDisplay.text = step3Text;
+				break;
+			case 4:
+				calculatorStepDisplay.text = step4Text;
+				break;
+		}
+		
+		//Debug.Log ("startLifetime: " + Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY * 8.0f);
 
 
 		//sightLineParticleSystem.GetComponent<ParticleSystem>().renderer.enabled = false;
@@ -88,7 +137,7 @@ public class PlayerController : MonoBehaviour {
 		Quaternion angles = Quaternion.Euler (new Vector3 (fireAngle, -90, 0));
 		sightLineParticleSystem.transform.rotation = angles;
 
-		if (!shooting && Input.GetKeyDown (KeyCode.Space)) {
+		if (Input.GetKeyDown (KeyCode.Space)) {
 			if (isControlActive) {
 				fireBall();
 			}

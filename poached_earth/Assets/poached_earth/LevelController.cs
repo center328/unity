@@ -9,6 +9,7 @@ public class LevelController : MonoBehaviour {
 	
 	public GUIText fenceHeightDisplay;
 	public GUIText distanceXDisplay;
+	public float distanceValue;
 
 	public GameObject player1Capsule;
 	public GameObject player2Capsule;
@@ -35,7 +36,8 @@ public class LevelController : MonoBehaviour {
 	void Start () {
 //		Debug.Log("start");
 
-		distanceXDisplay.text = "Distance X: " + Vector3.Distance (player1Capsule.transform.position, player2Capsule.transform.position).ToString() + " m";
+		distanceValue = Vector3.Distance (player1Capsule.transform.position, player2Capsule.transform.position);
+		distanceXDisplay.text = "Distance X: " + distanceValue.ToString () + " m";
 		fenceHeightDisplay.text = "Fence Height: " + fence.transform.lossyScale.y + " m";
 	}
 	
@@ -79,9 +81,15 @@ public class LevelController : MonoBehaviour {
 			}
 		}
 
+		// Toggle calculator state
 		if (Input.GetKeyDown (KeyCode.Return)) {
 
-			Debug.Log ("Enter key pressed");
+			int step = activePlayer.CURRENT_STEP++;
+			if (step == 4) {
+				activePlayer.CURRENT_STEP = 0;
+			}
+			
+			Debug.Log ("Enter key pressed " + activePlayer.CURRENT_STEP);
 		}
 
 		if (Input.GetMouseButtonUp (0) && !activePlayer.isMousedOver) {
