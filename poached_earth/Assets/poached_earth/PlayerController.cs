@@ -143,6 +143,7 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			if (isControlActive) {
 				fireBall();
+				animation.Play("ChickenAnimation");
 			}
 		}
 
