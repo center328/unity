@@ -57,6 +57,9 @@ public class PlayerController : MonoBehaviour {
 		if (collision.gameObject.tag == "enemy") {
 			Debug.Log ("WELL DONE! :-)");
 			resultDisplay.text = "NICE SHOT! :-)";
+			int newX = 945;
+			Vector3 enemyPosition = new Vector3(945 + (40 * Random.value), 1, 1015);
+			collision.gameObject.transform.position = enemyPosition;
 
 		} else {
 			Debug.Log ("TRY AGAIN");
