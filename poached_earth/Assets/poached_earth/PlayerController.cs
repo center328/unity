@@ -5,14 +5,19 @@ public class PlayerController : MonoBehaviour {
 
 	public bool isMousedOver = false;
 	public bool isControlActive = false;
-	public float fireAngle = 0;
+
+	public float fireAngle = 0f;
+	public float fireVelocity = 0f;
 
 	public GameObject sightLineParticleSystem;
 
+	public GUIText angleDisplay;
+	public GUIText velocityDisplay;
+
 	public GameObject ballPrefab;
-	private GameObject realBall;
-	private bool isBallThrown;
-	private float power;
+	GameObject realBall;
+	bool isBallThrown;
+	float power;
 	
 	public void onBallCollided( Collision collision )
 	{
@@ -28,16 +33,20 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sightLineParticleSystem = gameObject.transform.GetChild (0).gameObject;
-		sightLineParticleSystem.GetComponent<ParticleSystem> ().renderer.enabled = false;
+		sightLineParticleSystem.GetComponent<ParticleSystem>().renderer.enabled = false;
+
+		//fireBall();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Quaternion angles = Quaternion.Euler (new Vector3 (fireAngle, 0, 0));
+		angleDisplay.text = "Angle: " + Mathf.Round(fireAngle);
+		velocityDisplay.text = "Velocity: " + Mathf.Round(fireVelocity);
+
+		Quaternion angles = Quaternion.Euler (new Vector3 (fireAngle, -90, 0));
 		sightLineParticleSystem.transform.rotation = angles;
 
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			
 			if (isControlActive) {
 				fireBall();
 			}
@@ -47,24 +56,21 @@ public class PlayerController : MonoBehaviour {
 	private void createBall()
 	{
 		realBall = GameObject.Instantiate (ballPrefab, gameObject.transform.position, Quaternion.identity) as GameObject;
+		realBall.GetComponent<BallScript>().playerController = this;
 	}
 
 	private void fireBall () {
-		createBall (); //test
+		createBall(); //test
 		realBall.rigidbody.useGravity = true;
-		realBall.rigidbody.velocity = new Vector3 (0, 20.0f, 20.0f); // Never exceed like 30f
-	}
-
-	private Vector2 GetForceFrom(Vector3 fromPos, Vector3 toPos) {
-		return (new Vector2(toPos.x, toPos.y) - new Vector2(fromPos.x, fromPos.y))*power;
+		realBall.rigidbody.velocity = new Vector3(-10f, 20f, 0); // Never exceed like 30f
 	}
 
 	// Click handler
 	void OnMouseUp() {
 		Debug.Log ("Player mouse up");
-		gameObject.renderer.material.SetColor ("_Color", Color.red);
 		isControlActive = true;
-		sightLineParticleSystem.GetComponent<ParticleSystem> ().renderer.enabled = true;
+		gameObject.renderer.material.SetColor ("_Color", Color.red);
+		sightLineParticleSystem.GetComponent<ParticleSystem>().renderer.enabled = true;
 	}
 
 	// Mouse over handler

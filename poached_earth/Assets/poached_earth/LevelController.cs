@@ -28,26 +28,30 @@ public class LevelController : MonoBehaviour {
 //		GL.PopMatrix();
 
 		if (Input.GetKey (KeyCode.LeftArrow)) {
-
-			viewportCamera.transform.Translate (new Vector2 (-0.2f, 0));
+	
+			if (activePlayer.isControlActive) {
+				activePlayer.fireVelocity -= 0.1f;
+			} else {
+				viewportCamera.transform.Translate (new Vector2 (-0.2f, 0));
+			}
 		} else if (Input.GetKey (KeyCode.RightArrow)) {
 
-			viewportCamera.transform.Translate (new Vector2 (0.2f, 0));
 			if (activePlayer.isControlActive) {
-
-
+				activePlayer.fireVelocity += 0.1f;
+			} else {
+				viewportCamera.transform.Translate (new Vector2 (0.2f, 0));
 			}
 		} else if ( Input.GetKey (KeyCode.UpArrow) ) {
 
 			if (activePlayer.isControlActive) {
-				activePlayer.fireAngle++;
+				activePlayer.fireAngle += 0.1f;
 			} else {
 				viewportCamera.transform.Translate (new Vector3 (0, 0, 0.2f));
 			}
 		} else if ( Input.GetKey (KeyCode.DownArrow) ) {
 
 			if (activePlayer.isControlActive) {
-				activePlayer.fireAngle--;
+				activePlayer.fireAngle -= 0.1f;
 			} else {
 				viewportCamera.transform.Translate (new Vector3 (0, 0, -0.2f));
 			}
