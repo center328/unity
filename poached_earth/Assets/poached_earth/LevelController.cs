@@ -108,7 +108,7 @@ public class LevelController : MonoBehaviour {
 			} else {
 				viewportCamera.transform.Translate (new Vector3 (0, -1f * ZOOM_INC_Y, ZOOM_INC_Z));
 			}
-	} else if ( Input.GetKey (KeyCode.DownArrow) ) {
+		} else if ( Input.GetKey (KeyCode.DownArrow) ) {
 
 			if (!isPlayer1 && player2.isControlActive && player2.fireAngle > -1f * MIN_ANGLE) {
 				player2.fireAngle += ANGLE_INC;
@@ -124,11 +124,17 @@ public class LevelController : MonoBehaviour {
 
 			if (!isPlayer1) {
 				int step = player2.CURRENT_STEP++;
-				if (step == 5) {
-					player2.CURRENT_STEP = 0;
+				if (step == 6) {
+					player2.CURRENT_STEP = 1;
 				}
 				
 				Debug.Log ("Enter key pressed " + player2.CURRENT_STEP);
+			} else {
+				int step = player1.CURRENT_STEP++;
+				if (step == 6) {
+					player1.CURRENT_STEP = 1;
+				}
+
 			}
 		}
 

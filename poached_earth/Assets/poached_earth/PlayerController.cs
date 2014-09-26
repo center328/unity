@@ -54,12 +54,13 @@ public class PlayerController : MonoBehaviour {
 	const string step3Text = "Step 3: Calculate the X-velocity of the throw:";
 	const string step4Text = "Step 4: Calculate the Y-velocity of the throw:";
 	const string step5Text = "Step 5: Calculate the Number of Seconds in air";
+	const string step6Text = "Step 6: Calculate X-distance ball travels";
 
 	const string step1EqA = " = xEffect = cos(";
-	const string step1EqB = "deg * 2pi / 360)";
+	const string step1EqB = " * 2pi / 360)";
 
 	const string step2EqA = " = yEffect = sin(";
-	const string step2EqB = "deg * 2pi / 360)";
+	const string step2EqB = " * 2pi / 360)";
 
 	const string step3EqA = " = xVelocity = ";
 	const string step3EqB = " * ";
@@ -68,10 +69,18 @@ public class PlayerController : MonoBehaviour {
 	const string step4EqB = " * ";
 
 	const string step5EqA = " = timeInAir = ";
-	const string step5EqB = "2 * ( -yVelocity / -9.8m/s/s )";
+	const string step5EqB = "2 * ( -"; 
+	const string step5EqC = " / -9.8m/s/s )";
 	
 	const string step6EqA = " = xDistance = ";
-	const string step6EqB = " ( xVelocity * timeInAir )";
+	//const string step6EqB = " ( xVelocity * timeInAir )";
+
+	float answer1;
+	float answer2;
+	float answer3;
+	float answer4;
+	float answer5;
+	float answer6;
 	
 	public void onBallCollided( Collision collision )
 	{
@@ -89,12 +98,14 @@ public class PlayerController : MonoBehaviour {
 			levelController.player1Capsule.tag = "Untagged";
 			levelController.player1.fireAngle = 45f;
 			levelController.player1.fireAngle -= 90f;
+			levelController.player1.CURRENT_STEP = 1;
 			
 			sightLineParticleSystem.transform.rotation = Quaternion.identity;
 		} else {
 			levelController.player1Capsule.tag = "enemy";
 			levelController.player2Capsule.tag = "Untagged";
 			levelController.player2.fireAngle = 135f;
+			levelController.player2.CURRENT_STEP = 1;
 		}
 
 		levelController.player1Capsule.renderer.material.SetColor ("_Color", Color.gray);
@@ -142,19 +153,11 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		if (!levelController.isPlayer1 ) { // Player 2
-			/*if (fireAngle > -1.0f) {
-				fireAngle = -1f * LevelController.MIN_ANGLE;
-			}*/
-			angleValueString = (Mathf.Round ((180-fireAngle) * 10f) / 10f) + " deg";
+			angleValueString = Mathf.Abs(Mathf.Round ((180-fireAngle) * 10f) / 10f) + " deg";
 			//Debug.Log (angleValueString);
 			angleDisplay.text = "Angle: " + angleValueString;
 		} else { // Player 1
-			/*if (fireAngle < LevelController.MIN_ANGLE) {
-				fireAngle = LevelController.MIN_ANGLE;
-			}*/
-			//Debug.Log ("DEBUG update fireAngle: "+fireAngle);
-
-			angleValueString = (Mathf.Round (fireAngle * 10f) / 10f) + " deg";
+			angleValueString = Mathf.Abs(Mathf.Round (fireAngle * 10f) / 10f) + " deg";
 			angleDisplay.text = "Angle: " + angleValueString;
 		}
 		velocityValueString = (Mathf.Round (fireVelocity * 100f) / 100f) + " m/s";
@@ -179,20 +182,42 @@ public class PlayerController : MonoBehaviour {
 
 				calculatorStepDisplay.text = step1Text;
 
-				calculatorEquationDisplay.text = step1EqA + step1EqB;
+				answer1 = Mathf.Round(Mathf.Cos(fireAngle * 2 * Mathf.PI / 360f) * 100f) / 100f;
+				calculatorEquationDisplay.text = answer1 + step1EqA + angleValueString + step1EqB;
 				break;
 			case 2:
 				calculatorStepDisplay.text = step2Text;
+			
+				answer2 = Mathf.Round(Mathf.Sin(Mathf.Abs(fireAngle) * 2 * Mathf.PI / 360f) * 100f) / 100f;
+				calculatorEquationDisplay.text = answer2 + step2EqA + angleValueString + step2EqB;	
 				break;
 			case 3:
 				calculatorStepDisplay.text = step3Text;
+			
+				answer3 = answer1 * Mathf.Abs(fireVelocity);
+				calculatorEquationDisplay.text = answer3 + step3EqA + answer1 + step3EqB + Mathf.Abs(fireVelocity);	
 				break;
 			case 4:
 				calculatorStepDisplay.text = step4Text;
+			
+				answer4 = answer2 * Mathf.Abs(fireVelocity);
+				calculatorEquationDisplay.text = answer4 + step4EqA + answer2 + step4EqB + Mathf.Abs(fireVelocity);	
 				break;
 			case 5:
 				calculatorStepDisplay.text = step5Text;
+
+				answer5 = 2 * ( -answer4 / -9.8f);
+				calculatorEquationDisplay.text = answer5 + step5EqA + step5EqB + answer4 + step5EqC;	
 				break;
+
+			case 6:
+				calculatorStepDisplay.text = step6Text;
+			
+				answer6 = answer5 * answer3;
+				calculatorEquationDisplay.text = answer6 + step6EqA + "( " + answer5 + " * " + answer6 + " )";	
+
+				break;
+
 		}
 		
 		//Debug.Log ("startLifetime: " + Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY * 8.0f);
