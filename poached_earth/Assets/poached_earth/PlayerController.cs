@@ -35,10 +35,6 @@ public class PlayerController : MonoBehaviour {
 	private int y1 = 0;
 	private int y2 = 200;
 
-	private bool shooting = false;
-	private bool increasing = false;
-	private float thePower;
-
 	public void onBallCollided( Collision collision )
 	{
 		if (collision.gameObject.tag == "enemy") {
@@ -93,16 +89,9 @@ public class PlayerController : MonoBehaviour {
 		sightLineParticleSystem.transform.rotation = angles;
 
 		if (!shooting && Input.GetKeyDown (KeyCode.Space)) {
-			increasing = true;
 			if (isControlActive) {
 				fireBall();
 			}
-		}
-
-		if (!shooting && Input.GetKeyUp (KeyCode.Space)) {
-			increasing = false;
-			StartCoroutine(Shoot(thePower));
-			thePower = 0;
 		}
 
 		/*LineRenderer lineRenderer = GetComponent<LineRenderer> ();
