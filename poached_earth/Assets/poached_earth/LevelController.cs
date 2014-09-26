@@ -3,17 +3,40 @@ using System.Collections;
 
 public class LevelController : MonoBehaviour {
 
-	public GameObject paddle;
+	public GameObject ground;
+	public GameObject fence;
 	public GameObject viewportCamera;
+	
+	public GUIText fenceHeightDisplay;
+	public GUIText distanceXDisplay;
 
 	public GameObject player1Capsule;
 	public GameObject player2Capsule;
 
 	public PlayerController activePlayer;
 
+	public bool isPlayer1 = false;
+
+	public const float MIN_VELOCITY = 10.0f;
+	public const float MIN_ANGLE = 5.0f;
+	public const float MAX_VELOCITY = 40.0f;
+	public const float MAX_ANGLE = 85.0f;
+
+	public const float ANGLE_INC = 0.2f;
+	public const float VELOCITY_INC = 0.1f;
+
+	public const float ZOOM_INC_Z = 0.4f;
+	public const float ZOOM_INC_Y = 0.2f;
+	public const float SCROLL_INC = 0.4f;
+
+	public const float FENCE_HEIGHT = 11f;
+
 	// Use this for initialization
 	void Start () {
 //		Debug.Log("start");
+
+		distanceXDisplay.text = "Distance X: " + Vector3.Distance (player1Capsule.transform.position, player2Capsule.transform.position).ToString() + " m";
+		fenceHeightDisplay.text = "Fence Height: " + fence.transform.lossyScale.y + " m";
 	}
 	
 	// Update is called once per frame
@@ -30,30 +53,38 @@ public class LevelController : MonoBehaviour {
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 	
 			if (activePlayer.isControlActive) {
-				activePlayer.fireVelocity -= 0.1f;
+				if (!isPlayer1 && activePlayer.fireVelocity < MAX_VELOCITY) {
+					activePlayer.fireVelocity += VELOCITY_INC;
+				}
 			} else {
-				viewportCamera.transform.Translate (new Vector2 (-0.2f, 0));
+				viewportCamera.transform.Translate (new Vector2 (-1f * SCROLL_INC, 0));
 			}
 		} else if (Input.GetKey (KeyCode.RightArrow)) {
 
-			if (activePlayer.isControlActive) {
-				activePlayer.fireVelocity += 0.1f;
+			if (activePlayer.isControlActive) { 
+				if (!isPlayer1 && activePlayer.fireVelocity > MIN_VELOCITY) {
+					activePlayer.fireVelocity -= VELOCITY_INC;
+				}
 			} else {
-				viewportCamera.transform.Translate (new Vector2 (0.2f, 0));
+				viewportCamera.transform.Translate (new Vector2 (SCROLL_INC, 0));
 			}
 		} else if ( Input.GetKey (KeyCode.UpArrow) ) {
 
 			if (activePlayer.isControlActive) {
-				activePlayer.fireAngle += 0.1f;
+				if (!isPlayer1 && activePlayer.fireAngle > -1f * MAX_ANGLE) {
+					activePlayer.fireAngle -= ANGLE_INC;
+				}
 			} else {
-				viewportCamera.transform.Translate (new Vector3 (0, 0, 0.2f));
+				viewportCamera.transform.Translate (new Vector3 (0, -1f * ZOOM_INC_Y, ZOOM_INC_Z));
 			}
 		} else if ( Input.GetKey (KeyCode.DownArrow) ) {
 
 			if (activePlayer.isControlActive) {
-				activePlayer.fireAngle -= 0.1f;
+				if (!isPlayer1 && activePlayer.fireAngle < -1f * MIN_ANGLE) {
+					activePlayer.fireAngle += ANGLE_INC;
+				}
 			} else {
-				viewportCamera.transform.Translate (new Vector3 (0, 0, -0.2f));
+				viewportCamera.transform.Translate (new Vector3 (0, ZOOM_INC_Y, -1f * ZOOM_INC_Z));
 			}
 		}
 

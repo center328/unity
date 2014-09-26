@@ -8,5 +8,6 @@ public class BallScript : MonoBehaviour
 	void OnCollisionEnter( Collision coll )
 	{
 		playerController.onBallCollided ( coll );
+		GameObject.Destroy (gameObject);
 	}
 }
