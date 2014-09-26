@@ -79,9 +79,15 @@ public class LevelController : MonoBehaviour {
 			}
 		}
 
+		// Toggle calculator state
 		if (Input.GetKeyDown (KeyCode.Return)) {
 
-			Debug.Log ("Enter key pressed");
+			int step = activePlayer.CURRENT_STEP++;
+			if (step == 2) {
+				activePlayer.CURRENT_STEP = 0;
+			}
+			
+			Debug.Log ("Enter key pressed " + activePlayer.CURRENT_STEP);
 		}
 
 		if (Input.GetMouseButtonUp (0) && !activePlayer.isMousedOver) {
