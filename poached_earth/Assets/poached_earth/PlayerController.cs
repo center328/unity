@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour {
 	public GUIText calculatorVelocityDisplay;
 	public GUIText calculatorDistanceDisplay;
 	public GUIText calculatorStepDisplay;
+	public GUIText calculatorStaticEqDisplay;
 	public GUIText calculatorEquationDisplay;
 
 	string angleValueString;
@@ -56,22 +57,28 @@ public class PlayerController : MonoBehaviour {
 	const string step5Text = "Step 5: Calculate the Number of Seconds in air";
 	const string step6Text = "Step 6: Calculate X-distance ball travels";
 
+	const string step1Eq = "? = xEffect = cos( angle * 2pi / 360 )";
 	const string step1EqA = " = xEffect = cos(";
 	const string step1EqB = " * 2pi / 360)";
-
+	
+	const string step2Eq = "? = yEffect = sin( angle * 2pi / 360 )";
 	const string step2EqA = " = yEffect = sin(";
 	const string step2EqB = " * 2pi / 360)";
 
+	const string step3Eq = "? = xVelocity = xEffect * totalVelocity";
 	const string step3EqA = " = xVelocity = ";
 	const string step3EqB = " * ";
-
+	
+	const string step4Eq = "? = yVelocity = yEffect * totalVelocity";
 	const string step4EqA = " = yVelocity = ";
 	const string step4EqB = " * ";
-
+	
+	const string step5Eq = "? = timeInAir = 2 * ( -yEffect / gravity )";
 	const string step5EqA = " = timeInAir = ";
 	const string step5EqB = "2 * ( -"; 
 	const string step5EqC = " / -9.8m/s/s )";
-	
+
+	const string step6Eq = "? = xDistance = timeInAir * xVelocity";
 	const string step6EqA = " = xDistance = ";
 	//const string step6EqB = " ( xVelocity * timeInAir )";
 
@@ -183,41 +190,51 @@ public class PlayerController : MonoBehaviour {
 				calculatorStepDisplay.text = step1Text;
 
 				answer1 = Mathf.Round(Mathf.Cos(fireAngle * 2 * Mathf.PI / 360f) * 100f) / 100f;
-				calculatorEquationDisplay.text = answer1 + step1EqA + angleValueString + step1EqB;
+				calculatorEquationDisplay.text = Mathf.Abs(answer1) + step1EqA + angleValueString + step1EqB;
+
+				calculatorStaticEqDisplay.text = step1Eq;
 				break;
 			case 2:
 				calculatorStepDisplay.text = step2Text;
 			
 				answer2 = Mathf.Round(Mathf.Sin(Mathf.Abs(fireAngle) * 2 * Mathf.PI / 360f) * 100f) / 100f;
-				calculatorEquationDisplay.text = answer2 + step2EqA + angleValueString + step2EqB;	
+				calculatorEquationDisplay.text = Mathf.Abs(answer2) + step2EqA + angleValueString + step2EqB;	
+			
+				calculatorStaticEqDisplay.text = step2Eq;
 				break;
 			case 3:
 				calculatorStepDisplay.text = step3Text;
 			
 				answer3 = answer1 * Mathf.Abs(fireVelocity);
 				calculatorEquationDisplay.text = answer3 + step3EqA + answer1 + step3EqB + Mathf.Abs(fireVelocity);	
+			
+				calculatorStaticEqDisplay.text = step3Eq;
 				break;
 			case 4:
 				calculatorStepDisplay.text = step4Text;
 			
 				answer4 = answer2 * Mathf.Abs(fireVelocity);
 				calculatorEquationDisplay.text = answer4 + step4EqA + answer2 + step4EqB + Mathf.Abs(fireVelocity);	
+			
+				calculatorStaticEqDisplay.text = step4Eq;
 				break;
 			case 5:
 				calculatorStepDisplay.text = step5Text;
 
 				answer5 = 2 * ( -answer4 / -9.8f);
 				calculatorEquationDisplay.text = answer5 + step5EqA + step5EqB + answer4 + step5EqC;	
+				
+				calculatorStaticEqDisplay.text = step5Eq;
 				break;
 
 			case 6:
 				calculatorStepDisplay.text = step6Text;
 			
 				answer6 = answer5 * answer3;
-				calculatorEquationDisplay.text = answer6 + step6EqA + "( " + answer5 + " * " + answer6 + " )";	
+				calculatorEquationDisplay.text = Mathf.Abs(answer6) + step6EqA + "( " + answer5 + " * " + answer6 + " )";	
 
+				calculatorStaticEqDisplay.text = step6Eq;
 				break;
-
 		}
 		
 		//Debug.Log ("startLifetime: " + Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY * 8.0f);
