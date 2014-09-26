@@ -12,7 +12,11 @@ public class PlayerController : MonoBehaviour {
 	public GameObject sightLineParticleSystem;
 
 	public GUIText angleDisplay;
+	public GUIText calculatorAngleDisplay;
+
 	public GUIText velocityDisplay;
+	public GUIText calculatorVelocityDisplay;
+
 	public GUIText resultDisplay;
 	
 	public LevelController levelController;
@@ -21,6 +25,15 @@ public class PlayerController : MonoBehaviour {
 	GameObject realBall;
 	bool isBallThrown;
 	float power;
+
+	public Color c1 = Color.yellow;
+	public Color c2 = Color.red;
+	public int lengthOfLineRenderer = 2;
+
+	private int x1 = 0;
+	private int x2 = 200;
+	private int y1 = 0;
+	private int y2 = 200;
 
 	public void onBallCollided( Collision collision )
 	{
@@ -42,17 +55,35 @@ public class PlayerController : MonoBehaviour {
 		fireAngle = LevelController.MIN_ANGLE;
 		fireVelocity = LevelController.MIN_VELOCITY;
 		//fireBall();
+
+		sightLineParticleSystem.GetComponent<ParticleSystem> ().startLifetime = 4.0f;
+
+		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer> ();
+		lineRenderer.material = new Material (Shader.Find ("Particles/Additive"));
+		lineRenderer.SetColors (c1, c2);
+		lineRenderer.SetWidth (0.2f, 0.2f);
+		lineRenderer.SetVertexCount (lengthOfLineRenderer);
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if (!levelController.isPlayer1) {
+	void Update ()
+	{
+		if (!levelController.isPlayer1)
+		{
 			if (fireAngle > -1.0f) {
 				fireAngle = -1f * LevelController.MIN_ANGLE;
 			}
 			angleDisplay.text = "Angle: " + (Mathf.Round (fireAngle * 10f * -1) / 10f) + " deg";
 		}
 		velocityDisplay.text = "Velocity: " + (Mathf.Round(fireVelocity * 100f) / 100f) + " m/s";
+
+		Debug.Log ("startLifetime: " + Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY * 8.0f);
+
+
+		//sightLineParticleSystem.GetComponent<ParticleSystem>().renderer.enabled = false;
+		sightLineParticleSystem.GetComponent<ParticleSystem> ().startLifetime = Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY * 4.0f;
+		//sightLineParticleSystem.GetComponent<ParticleSystem> ().startSpeed = 10;
+		//sightLineParticleSystem.GetComponent<ParticleSystem>().renderer.enabled = true;
 
 		Quaternion angles = Quaternion.Euler (new Vector3 (fireAngle, -90, 0));
 		sightLineParticleSystem.transform.rotation = angles;
@@ -62,6 +93,20 @@ public class PlayerController : MonoBehaviour {
 				fireBall();
 			}
 		}
+
+		/*LineRenderer lineRenderer = GetComponent<LineRenderer> ();
+		int i = 0;
+		//while (i < lengthOfLineRenderer) {
+			//Vector3 pos1 = new Vector3(x1, y1, 0);
+		Debug.Log ("DEBUG: " + gameObject.transform.position);
+		if (gameObject.transform.position.x != null) {
+			lineRenderer.SetPosition (0, gameObject.transform.position);
+		}
+		Vector3 pos2 = new Vector3(x2 * Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY, y2 * Mathf.Abs(fireVelocity) / LevelController.MAX_VELOCITY, 0);
+			//lineRenderer.SetPosition(1, gameObject.transform.position);
+		lineRenderer.SetPosition(1, pos2);*/
+			//i++;
+		//}
 	}
 
 	private void createBall()

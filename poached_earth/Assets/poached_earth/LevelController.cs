@@ -22,7 +22,7 @@ public class LevelController : MonoBehaviour {
 	public const float MAX_VELOCITY = 40.0f;
 	public const float MAX_ANGLE = 85.0f;
 
-	public const float ANGLE_INC = 0.2f;
+	public const float ANGLE_INC = 0.4f;
 	public const float VELOCITY_INC = 0.1f;
 
 	public const float ZOOM_INC_Z = 0.4f;
@@ -41,15 +41,6 @@ public class LevelController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-//		GL.PushMatrix();
-//		GL.LoadOrtho();
-//		GL.Begin(GL.LINES);
-//		GL.Color(Color.red);
-//		GL.Vertex(new Vector3(0,0,0));
-//		GL.Vertex(new Vector3(10,10,0));
-//		GL.End ();
-//		GL.PopMatrix();
-
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 	
 			if (activePlayer.isControlActive) {
