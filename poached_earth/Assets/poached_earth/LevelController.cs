@@ -89,7 +89,7 @@ public class LevelController : MonoBehaviour {
 				activePlayer.CURRENT_STEP = 0;
 			}
 			
-			Debug.Log ("Enter key pressed " + activePlayer.CURRENT_STEP);
+			Debug.Log("Enter key pressed " + activePlayer.CURRENT_STEP);
 		}
 
 		if (Input.GetMouseButtonUp (0) && !activePlayer.isMousedOver) {
@@ -99,6 +99,13 @@ public class LevelController : MonoBehaviour {
 			activePlayer.isControlActive = false;
 			// turn of particles
 			activePlayer.sightLineParticleSystem.GetComponent<ParticleSystem> ().renderer.enabled = false;
+		}
+
+		if (player2Capsule.activeInHierarchy == false) {
+			player2Capsule.SetActive (true);
+			Vector3 enemyPosition = new Vector3(945 + (40 * Random.value), 1, 1015);
+			player2Capsule.transform.position = enemyPosition;
+			//player2Capsule.nextup()
 		}
 	}
 }

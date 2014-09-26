@@ -58,13 +58,14 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log ("WELL DONE! :-)");
 			resultDisplay.text = "NICE SHOT! :-)";
 			int newX = 945;
-			Vector3 enemyPosition = new Vector3(945 + (40 * Random.value), 1, 1015);
-			collision.gameObject.transform.position = enemyPosition;
+			collision.gameObject.SetActive(false);
 
 		} else {
 			Debug.Log ("TRY AGAIN");
 			resultDisplay.text = "Try again.";
 		}
+
+
 	}
 
 	// Use this for initialization
